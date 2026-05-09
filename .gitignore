@@ -1,0 +1,11 @@
+# CMake build outputs
+/build/
+/cmake-build-*/
+
+# Compiled artifacts
+*.a
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
