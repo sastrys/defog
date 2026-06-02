@@ -41,7 +41,7 @@ Use the following naming consistently:
 Product name: Defog
 CLI command: defog
 Project directory: defog/
-Local state directory: .dfog/
+Local state directory: .defog/
 Internal namespace: defog
 ```
 
@@ -858,7 +858,7 @@ Output behavior:
 ```text
 If -o ends with .dot, write DOT.
 If -o ends with .svg, write SVG by invoking Graphviz dot if available.
-If -o is omitted, write SVG to .dfog/graphs/<generated-name>.svg when Graphviz is available, otherwise write DOT.
+If -o is omitted, write SVG to .defog/graphs/<generated-name>.svg when Graphviz is available, otherwise write DOT.
 ```
 
 Do not link against Graphviz for MVP. Shell out to `dot` if installed.
@@ -868,10 +868,10 @@ If Graphviz is missing:
 ```text
 Graphviz 'dot' not found.
 Wrote DOT instead:
-  .dfog/graphs/changed_calls.dot
+  .defog/graphs/changed_calls.dot
 
 Install Graphviz or run:
-  dot -Tsvg .dfog/graphs/changed_calls.dot -o changed_calls.svg
+  dot -Tsvg .defog/graphs/changed_calls.dot -o changed_calls.svg
 ```
 
 Multi-target behavior:
@@ -943,13 +943,13 @@ defog report src/data
 defog report src/data/transforms.py::build_transforms@12-45
 defog changed --kind function -q | defog report --open
 defog report --open
-defog report -o .dfog/report
+defog report -o .defog/report
 ```
 
 Default output:
 
 ```text
-.dfog/report/index.html
+.defog/report/index.html
 ```
 
 Report types:
@@ -1076,8 +1076,8 @@ The target repo size is around 100k LOC. The first implementation does not need 
 Acceptable MVP storage options:
 
 ```text
-Option A: JSON/JSONL index files under .dfog/index/
-Option B: SQLite database under .dfog/index.sqlite
+Option A: JSON/JSONL index files under .defog/index/
+Option B: SQLite database under .defog/index.sqlite
 ```
 
 The coding agent should choose based on simplicity and performance.
@@ -1172,7 +1172,7 @@ Ignore by default:
 
 ```text
 .git/
-.dfog/
+.defog/
 build/
 bazel-*/
 cmake-build-*/
@@ -1190,7 +1190,7 @@ Keep ignore rules simple.
 Later support:
 
 ```text
-.dfogignore
+.defogignore
 respect .gitignore
 language-specific ignores
 ```
@@ -1468,13 +1468,13 @@ No local web server required.
 Output directory:
 
 ```text
-.dfog/report/
+.defog/report/
 ```
 
 Default entry:
 
 ```text
-.dfog/report/index.html
+.defog/report/index.html
 ```
 
 ### 14.2 Changed-code report layout
@@ -1696,7 +1696,7 @@ Tests first:
 ```text
 Discovers .go, .py, .cc, .cpp, .h, .hpp files.
 Ignores .git.
-Ignores .dfog.
+Ignores .defog.
 Ignores build directories.
 Ignores venv/node_modules.
 Returns sorted paths.
