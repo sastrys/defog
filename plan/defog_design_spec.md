@@ -1,4 +1,4 @@
-# Defog (`dfog`) - Human-First Code Comprehension Tool
+# Defog (`defog`) - Human-First Code Comprehension Tool
 
 **Design and implementation specification**  
 **Version:** 0.1  
@@ -14,7 +14,7 @@ Build **Defog**, a local developer tool for understanding code that was just wri
 The CLI executable should be named:
 
 ```bash
-dfog
+defog
 ```
 
 Defog's job is to help a human developer quickly answer:
@@ -39,7 +39,7 @@ Use the following naming consistently:
 
 ```text
 Product name: Defog
-CLI command: dfog
+CLI command: defog
 Project directory: defog/
 Local state directory: .dfog/
 Internal namespace: defog
@@ -50,11 +50,11 @@ The phrase **code atlas** may be used internally as a concept, meaning the index
 Examples:
 
 ```bash
-dfog update
-dfog status
-dfog changed --kind function
-dfog changed --kind function -q | dfog show -v
-dfog report --changed --open
+defog update
+defog status
+defog changed --kind function
+defog changed --kind function -q | defog show -v
+defog report --changed --open
 ```
 
 ---
@@ -68,17 +68,17 @@ The primary use case is:
 The golden path should be:
 
 ```bash
-dfog update
-dfog status
-dfog changed --kind function
-dfog changed --kind function -q | dfog show -v
-dfog report --changed --open
+defog update
+defog status
+defog changed --kind function
+defog changed --kind function -q | defog show -v
+defog report --changed --open
 ```
 
 A good session should look like this:
 
 ```text
-$ dfog status
+$ defog status
 
 Defog status
 
@@ -96,15 +96,15 @@ Changed targets since HEAD:
   added tests: 1
 
 Try:
-  dfog changed
-  dfog changed --kind function
-  dfog report --changed --open
+  defog changed
+  defog changed --kind function
+  defog report --changed --open
 ```
 
 Then:
 
 ```text
-$ dfog changed --kind function
+$ defog changed --kind function
 
 modified  src/data/transforms.py::build_transforms@12-45
 modified  src/data/dataloader.py::create_loaders@31-88
@@ -114,7 +114,7 @@ added     tests/test_transforms.py::test_validation_transforms_are_deterministic
 Then:
 
 ```bash
-dfog changed --kind function -q | dfog show -v
+defog changed --kind function -q | defog show -v
 ```
 
 Defog should produce structured explanations of each changed function.
@@ -122,7 +122,7 @@ Defog should produce structured explanations of each changed function.
 Then:
 
 ```bash
-dfog report --changed --open
+defog report --changed --open
 ```
 
 Defog should generate a static local report with summaries, diagrams, and source spans.
@@ -157,7 +157,7 @@ Use existing tools wherever they naturally fit:
 Use Git for change detection.
 Use DOT/Graphviz for diagram layout and SVG rendering.
 Use Tree-sitter or another existing parser for structural extraction, where useful.
-Use GoogleTest for tests.
+Use Go's standard testing package for tests.
 Use SQLite only if it meaningfully improves simplicity, performance, or reliability.
 ```
 
@@ -218,9 +218,9 @@ selector command -> target refs -> view/report/graph command
 Examples:
 
 ```bash
-dfog changed --kind function -q | dfog show -v
-dfog find "augmentation" --kind function -q | dfog graph calls -o calls.svg
-dfog ls src/data --kind function -q | dfog report --open
+defog changed --kind function -q | defog show -v
+defog find "augmentation" --kind function -q | defog graph calls -o calls.svg
+defog ls src/data --kind function -q | defog report --open
 ```
 
 ### 4.6 Human-readable by default, pipeable when requested
@@ -236,19 +236,19 @@ default      human-readable table/text
 Example:
 
 ```bash
-dfog changed --kind function
+defog changed --kind function
 ```
 
 prints a readable table.
 
 ```bash
-dfog changed --kind function -q
+defog changed --kind function -q
 ```
 
 prints only stable target refs.
 
 ```bash
-dfog changed --kind function --jsonl
+defog changed --kind function --jsonl
 ```
 
 prints JSON Lines.
@@ -283,23 +283,23 @@ Every feature should be implemented test-first:
 4. Refactor while keeping tests green.
 ```
 
-### 4.9 Follow Google C++ style if implemented in C++
+### 4.9 Implement Defog in Go
 
-If implemented in C++, use modern but conservative C++.
+Defog should be implemented in Go.
 
 Preferred:
 
 ```text
-C++20
-Google C++ Style Guide
-GoogleTest
-CMake and CTest, unless Bazel is chosen deliberately
-Google Benchmark optional
-Status/StatusOr-style error handling
+Go 1.22 or newer
+Standard Go project layout with packages under internal/ where appropriate
+Go standard library first, with small dependencies only when they clearly simplify the tool
+go test for unit and integration tests
+go test -bench optional for benchmarks
+Explicit error returns with useful context
 Deterministic output
 ```
 
-Avoid exceptions in production logic unless the implementation has a strong reason and documents it.
+Avoid global mutable state in production logic unless the implementation has a strong reason and documents it.
 
 ---
 
@@ -427,24 +427,24 @@ A **TargetSet** is a list of targets produced by selector commands and consumed 
 Selector commands:
 
 ```bash
-dfog changed
-dfog ls
-dfog find
+defog changed
+defog ls
+defog find
 ```
 
 Consumer commands:
 
 ```bash
-dfog show
-dfog graph
-dfog inspect
-dfog report
+defog show
+defog graph
+defog inspect
+defog report
 ```
 
 Pipeline example:
 
 ```bash
-dfog changed --kind function -q | dfog show -v
+defog changed --kind function -q | defog show -v
 ```
 
 ### 6.4 ChangeSet
@@ -454,11 +454,11 @@ A **ChangeSet** is a target set derived from Git state.
 Examples:
 
 ```bash
-dfog changed
-dfog changed --staged
-dfog changed --unstaged
-dfog changed --untracked
-dfog changed --base main
+defog changed
+defog changed --staged
+defog changed --unstaged
+defog changed --untracked
+defog changed --base main
 ```
 
 Use Git as the source of truth for changes.
@@ -472,42 +472,42 @@ Use Git as the source of truth for changes.
 The MVP command surface should be:
 
 ```bash
-dfog update
-dfog status
-dfog changed
-dfog ls
-dfog find
-dfog show
-dfog graph
-dfog inspect
-dfog report
+defog update
+defog status
+defog changed
+defog ls
+defog find
+defog show
+defog graph
+defog inspect
+defog report
 ```
 
 Avoid long commands like:
 
 ```bash
-dfog diagram . --type dependencies --format svg --node ...
+defog diagram . --type dependencies --format svg --node ...
 ```
 
 Prefer:
 
 ```bash
-dfog graph deps
-dfog graph calls build_transforms
-dfog report --changed --open
+defog graph deps
+defog graph calls build_transforms
+defog report --changed --open
 ```
 
 ---
 
 ## 8. Command specifications
 
-### 8.1 `dfog update`
+### 8.1 `defog update`
 
 Refresh the local Defog index.
 
 ```bash
-dfog update
-dfog update --force
+defog update
+defog update --force
 ```
 
 Responsibilities:
@@ -537,23 +537,23 @@ Tests: 104
 Elapsed: 1.3s
 ```
 
-If no index exists, `dfog update` creates one.
+If no index exists, `defog update` creates one.
 
 If a command needs the index and it is missing, it should print:
 
 ```text
 No Defog index found. Run:
-  dfog update
+  defog update
 ```
 
 A command may offer lightweight file-level fallback, but it should not silently do expensive work unless that behavior is documented.
 
-### 8.2 `dfog status`
+### 8.2 `defog status`
 
 Show Git and index state.
 
 ```bash
-dfog status
+defog status
 ```
 
 Responsibilities:
@@ -585,9 +585,9 @@ Changed targets since HEAD:
   added tests: 1
 
 Try:
-  dfog changed
-  dfog changed --kind function
-  dfog report --changed --open
+  defog changed
+  defog changed --kind function
+  defog report --changed --open
 ```
 
 Implementation guidance:
@@ -601,23 +601,23 @@ Use git ls-files --others --exclude-standard for untracked files.
 
 Shell out to Git. Do not reimplement Git.
 
-### 8.3 `dfog changed`
+### 8.3 `defog changed`
 
 Select targets changed relative to Git state.
 
 ```bash
-dfog changed
-dfog changed --kind file
-dfog changed --kind function
-dfog changed --kind class
-dfog changed --kind test
-dfog changed --kind region
-dfog changed --staged
-dfog changed --unstaged
-dfog changed --untracked
-dfog changed --base main
-dfog changed -q
-dfog changed --jsonl
+defog changed
+defog changed --kind file
+defog changed --kind function
+defog changed --kind class
+defog changed --kind test
+defog changed --kind region
+defog changed --staged
+defog changed --unstaged
+defog changed --untracked
+defog changed --base main
+defog changed -q
+defog changed --jsonl
 ```
 
 Default behavior:
@@ -641,7 +641,7 @@ added test         tests/test_transforms.py::test_validation_transforms_are_dete
 Quiet output:
 
 ```bash
-dfog changed --kind function -q
+defog changed --kind function -q
 ```
 
 prints:
@@ -670,26 +670,26 @@ MVP changed-symbol detection:
 
 Do not attempt perfect deleted-function detection in MVP. That requires parsing the base version from Git and comparing symbols. Add later.
 
-### 8.4 `dfog ls`
+### 8.4 `defog ls`
 
 List targets from the index.
 
 ```bash
-dfog ls
-dfog ls src
-dfog ls src/data
-dfog ls src/data --kind function
-dfog ls --kind class
-dfog ls --kind test
-dfog ls --changed
-dfog ls -q
-dfog ls --jsonl
+defog ls
+defog ls src
+defog ls src/data
+defog ls src/data --kind function
+defog ls --kind class
+defog ls --kind test
+defog ls --changed
+defog ls -q
+defog ls --jsonl
 ```
 
 Example:
 
 ```text
-$ dfog ls src/data
+$ defog ls src/data
 
 file      src/data/transforms.py
 function  src/data/transforms.py::build_transforms@12-45
@@ -710,17 +710,17 @@ Responsibilities:
 
 This command is the basic target discovery tool.
 
-### 8.5 `dfog find`
+### 8.5 `defog find`
 
 Search indexed targets.
 
 ```bash
-dfog find "validation augmentation"
-dfog find RandomCrop
-dfog find "decoder" --kind function
-dfog find "transform" --changed
-dfog find "augmentation" -q
-dfog find "augmentation" --jsonl
+defog find "validation augmentation"
+defog find RandomCrop
+defog find "decoder" --kind function
+defog find "transform" --changed
+defog find "augmentation" -q
+defog find "augmentation" --jsonl
 ```
 
 Example output:
@@ -746,15 +746,15 @@ summary/preview match, if available
 
 If SQLite FTS5 is already being used, use it for full-text search. If the codebase is small enough and a simpler implementation performs well, an indexed JSON file plus in-memory search is acceptable for MVP. Document the choice.
 
-### 8.6 `dfog show`
+### 8.6 `defog show`
 
 Show overview or structure for target refs.
 
 ```bash
-dfog show TARGET...
-dfog show TARGET... -v
-dfog show -v < targets.txt
-dfog changed --kind function -q | dfog show -v
+defog show TARGET...
+defog show TARGET... -v
+defog show -v < targets.txt
+defog changed --kind function -q | defog show -v
 ```
 
 If positional targets are supplied, use them.
@@ -787,9 +787,9 @@ Relationships:
   uses RandomCrop, RandomHorizontalFlip, Normalize
 
 Try:
-  dfog show src/data/transforms.py::build_transforms@12-45 -v
-  dfog graph calls src/data/transforms.py::build_transforms@12-45
-  dfog inspect src/data/transforms.py:22
+  defog show src/data/transforms.py::build_transforms@12-45 -v
+  defog graph calls src/data/transforms.py::build_transforms@12-45
+  defog inspect src/data/transforms.py:22
 ```
 
 #### Structure output
@@ -830,17 +830,17 @@ Called by:
 
 The structure output should be mostly deterministic and derived from indexed structure. Avoid free-form claims that cannot be tied to code.
 
-### 8.7 `dfog graph`
+### 8.7 `defog graph`
 
 Generate diagrams.
 
 ```bash
-dfog graph contain [TARGET...] [-o FILE]
-dfog graph deps [TARGET...] [-o FILE]
-dfog graph calls [TARGET...] [-d N] [-o FILE]
-dfog graph classes [TARGET...] [-o FILE]
-dfog graph flow TARGET [-o FILE]
-dfog changed --kind function -q | dfog graph calls -o changed_calls.svg
+defog graph contain [TARGET...] [-o FILE]
+defog graph deps [TARGET...] [-o FILE]
+defog graph calls [TARGET...] [-d N] [-o FILE]
+defog graph classes [TARGET...] [-o FILE]
+defog graph flow TARGET [-o FILE]
+defog changed --kind function -q | defog graph calls -o changed_calls.svg
 ```
 
 Graph kinds:
@@ -882,17 +882,17 @@ contain/deps/calls/classes:
 
 flow:
   Requires one function/method target by default.
-  If multiple flow targets are provided, either write one file per target with --out-dir or tell the user to use dfog report.
+  If multiple flow targets are provided, either write one file per target with --out-dir or tell the user to use defog report.
 ```
 
-### 8.8 `dfog inspect`
+### 8.8 `defog inspect`
 
 Inspect a precise target or location.
 
 ```bash
-dfog inspect TARGET
-dfog inspect src/data/transforms.py:22
-dfog inspect src/data/transforms.py::build_transforms@12-45
+defog inspect TARGET
+defog inspect src/data/transforms.py:22
+defog inspect src/data/transforms.py::build_transforms@12-45
 ```
 
 This command should be focused and code-centered.
@@ -900,7 +900,7 @@ This command should be focused and code-centered.
 Example:
 
 ```text
-$ dfog inspect src/data/transforms.py:22
+$ defog inspect src/data/transforms.py:22
 
 Location:
   src/data/transforms.py:22
@@ -931,19 +931,19 @@ return
 changed region
 ```
 
-### 8.9 `dfog report`
+### 8.9 `defog report`
 
 Generate a static human-readable report.
 
 ```bash
-dfog report
-dfog report --changed
-dfog report --changed --base main
-dfog report src/data
-dfog report src/data/transforms.py::build_transforms@12-45
-dfog changed --kind function -q | dfog report --open
-dfog report --open
-dfog report -o .dfog/report
+defog report
+defog report --changed
+defog report --changed --base main
+defog report src/data
+defog report src/data/transforms.py::build_transforms@12-45
+defog changed --kind function -q | defog report --open
+defog report --open
+defog report -o .dfog/report
 ```
 
 Default output:
@@ -965,7 +965,7 @@ single-target report
 For the MVP, prioritize:
 
 ```bash
-dfog report --changed --open
+defog report --changed --open
 ```
 
 #### Changed-code report contents
@@ -1027,10 +1027,10 @@ bare symbol name, if unambiguous
 Examples:
 
 ```bash
-dfog show src/data/transforms.py
-dfog show src/data/transforms.py:22
-dfog show src/data/transforms.py::build_transforms
-dfog show build_transforms
+defog show src/data/transforms.py
+defog show src/data/transforms.py:22
+defog show src/data/transforms.py::build_transforms
+defog show build_transforms
 ```
 
 Resolution order:
@@ -1056,9 +1056,9 @@ method    src/data/dataset.py::Dataset.load@31-72
 method    src/loader.cc::defog::Loader::Load@44-96
 
 Run:
-  dfog show src/io/image.py::load_image@14-48
-  dfog show src/data/dataset.py::Dataset.load@31-72
-  dfog show src/loader.cc::defog::Loader::Load@44-96
+  defog show src/io/image.py::load_image@14-48
+  defog show src/data/dataset.py::Dataset.load@31-72
+  defog show src/loader.cc::defog::Loader::Load@44-96
 ```
 
 Do not use session-local handles in the MVP.
@@ -1159,6 +1159,7 @@ test_related
 Supported file types for MVP:
 
 ```text
+.go
 .py
 .cc
 .cpp
@@ -1203,6 +1204,7 @@ language-specific ignores
 The MVP should support:
 
 ```text
+Go
 Python
 C++
 ```
@@ -1213,10 +1215,11 @@ Recommended order:
 
 ```text
 1. File discovery and target model.
-2. Python extractor.
-3. C++ extractor.
-4. Diagrams.
-5. Reports.
+2. Go extractor.
+3. Python extractor.
+4. C++ extractor.
+5. Diagrams.
+6. Reports.
 ```
 
 If scope must be reduced, implement one language first but keep the parser/extractor interface language-agnostic.
@@ -1224,6 +1227,23 @@ If scope must be reduced, implement one language first but keep the parser/extra
 ### 11.2 Extraction scope
 
 Extract only structural information.
+
+Go:
+
+```text
+imports
+packages
+structs
+interfaces
+functions
+methods
+signatures
+line spans
+containment
+call-like expressions
+test files/functions
+basic branch/loop/return locations, for flow graphs
+```
 
 Python:
 
@@ -1262,6 +1282,7 @@ Do not implement:
 
 ```text
 full type checking
+Go interface/type inference
 C++ overload resolution
 template instantiation
 macro expansion correctness
@@ -1391,6 +1412,8 @@ file -> imported file/module
 
 For Python, use import statements.
 
+For Go, use import declarations.
+
 For C++, use includes.
 
 Do not attempt perfect include-path resolution in MVP. If unresolved, show external dependency label.
@@ -1459,7 +1482,7 @@ Default entry:
 For:
 
 ```bash
-dfog report --changed --open
+defog report --changed --open
 ```
 
 Generate:
@@ -1512,7 +1535,7 @@ Do not overbuild frontend interactivity.
 
 ---
 
-## 15. C++ implementation guidance
+## 15. Go implementation guidance
 
 ### 15.1 Project shape
 
@@ -1520,11 +1543,12 @@ Recommended structure:
 
 ```text
 defog/
-  CMakeLists.txt
-  dfog/
-    main.cc
+  go.mod
+  cmd/
+    defog/
+      main.go
 
-  defog/
+  internal/
     app/
     cli/
     core/
@@ -1540,16 +1564,6 @@ defog/
     util/
 
   tests/
-    app/
-    cli/
-    discovery/
-    git/
-    parsing/
-    indexing/
-    search/
-    explain/
-    diagram/
-    report/
     golden/
 
   testdata/
@@ -1563,60 +1577,47 @@ The exact structure can vary, but keep boundaries clear.
 Suggested modules:
 
 ```text
-core/target.h
-core/target_ref.h
-core/target_set.h
-core/code_span.h
-core/edge.h
+internal/core/target.go
+internal/core/target_ref.go
+internal/core/target_set.go
+internal/core/code_span.go
+internal/core/edge.go
 
-discovery/file_discovery.h
-git/git_client.h
-git/change_detector.h
+internal/discovery/file_discovery.go
+internal/git/git_client.go
+internal/git/change_detector.go
 
-parsing/parser.h
-parsing/parser_registry.h
-parsing/python_extractor.h
-parsing/cpp_extractor.h
+internal/parsing/parser.go
+internal/parsing/parser_registry.go
+internal/parsing/go_extractor.go
+internal/parsing/python_extractor.go
+internal/parsing/cpp_extractor.go
 
-indexing/index_store.h
-indexing/file_index_store.h
-indexing/sqlite_index_store.h optional
+internal/indexing/index_store.go
+internal/indexing/file_index_store.go
+internal/indexing/sqlite_index_store.go optional
 
-search/searcher.h
-explain/explainer.h
+internal/search/searcher.go
+internal/explain/explainer.go
 
-diagram/diagram_graph.h
-diagram/diagram_builder.h
-diagram/dot_exporter.h
-diagram/graphviz_renderer.h
+internal/diagram/diagram_graph.go
+internal/diagram/diagram_builder.go
+internal/diagram/dot_exporter.go
+internal/diagram/graphviz_renderer.go
 
-report/report_builder.h
-report/html_writer.h
+internal/report/report_builder.go
+internal/report/html_writer.go
 
-cli/command.h
-cli/target_input.h
-cli/output_mode.h
+internal/cli/command.go
+internal/cli/target_input.go
+internal/cli/output_mode.go
 ```
 
 ### 15.3 Error handling
 
-Prefer:
+Use ordinary Go error returns. Wrap errors at package boundaries with enough context for CLI messages and tests, using `fmt.Errorf("...: %w", err)` where appropriate.
 
-```cpp
-Status
-StatusOr<T>
-```
-
-rather than exceptions.
-
-If Abseil is available, use:
-
-```cpp
-absl::Status
-absl::StatusOr<T>
-```
-
-If not, implement a small internal version.
+Do not introduce a custom status/result abstraction unless it removes concrete duplication and keeps call sites clearer than idiomatic Go.
 
 ### 15.4 Determinism
 
@@ -1637,26 +1638,25 @@ This matters for tests, reports, and user trust.
 
 ## 16. Build and test tooling
 
-Use CMake or Bazel. CMake is acceptable for MVP.
+Use the Go toolchain.
 
-Use GoogleTest for unit and integration tests.
+Use Go's standard `testing` package for unit and integration tests.
 
-Use CTest if using CMake.
+Keep tests colocated with the packages they exercise using `_test.go` files. Use `testdata/` for fixtures and golden outputs.
 
 Suggested commands:
 
 ```bash
-cmake -S . -B build
-cmake --build build
-ctest --test-dir build
+go test ./...
+go build ./cmd/defog
 ```
 
 Formatting/linting:
 
 ```text
-clang-format with Google style
-clang-tidy optional
-warnings as errors where practical
+gofmt
+go vet optional
+staticcheck optional
 ```
 
 ---
@@ -1668,9 +1668,9 @@ warnings as errors where practical
 Tests first:
 
 ```text
-dfog with no args prints help.
-dfog --help prints command list.
-dfog version prints version string.
+defog with no args prints help.
+defog --help prints command list.
+defog version prints version string.
 Unknown command exits nonzero.
 ```
 
@@ -1694,7 +1694,7 @@ Round-trips refs deterministically.
 Tests first:
 
 ```text
-Discovers .py, .cc, .cpp, .h, .hpp files.
+Discovers .go, .py, .cc, .cpp, .h, .hpp files.
 Ignores .git.
 Ignores .dfog.
 Ignores build directories.
@@ -1733,7 +1733,48 @@ Detects base ref diff.
 
 Use shell-out to Git.
 
-### Milestone 5 - Python extraction
+### Milestone 5 - Go extraction
+
+Tests first with small fixture:
+
+```go
+package data
+
+import "context"
+
+type Loader struct {
+    root string
+}
+
+func NewLoader(root string) *Loader {
+    return &Loader{root: root}
+}
+
+func (l *Loader) Load(ctx context.Context, index int) int {
+    return index
+}
+```
+
+Expected targets:
+
+```text
+file
+package data
+struct Loader
+function NewLoader
+method Loader.Load
+```
+
+Expected:
+
+```text
+stable refs
+correct spans
+containment edges
+signature text
+```
+
+### Milestone 6 - Python extraction
 
 Tests first with small fixture:
 
@@ -1770,7 +1811,7 @@ containment edges
 signature text
 ```
 
-### Milestone 6 - C++ extraction
+### Milestone 7 - C++ extraction
 
 Tests first with small fixture:
 
@@ -1805,7 +1846,7 @@ function defog::BuildTransforms
 
 Keep this structural. Do not solve all C++.
 
-### Milestone 7 - `dfog update`
+### Milestone 8 - `defog update`
 
 Tests first:
 
@@ -1817,7 +1858,7 @@ update removes targets for deleted files.
 update output is deterministic.
 ```
 
-### Milestone 8 - `dfog ls`
+### Milestone 9 - `defog ls`
 
 Tests first:
 
@@ -1829,7 +1870,7 @@ ls -q emits refs only.
 ls --jsonl emits valid JSONL.
 ```
 
-### Milestone 9 - `dfog changed`
+### Milestone 10 - `defog changed`
 
 Tests first:
 
@@ -1844,7 +1885,7 @@ changed -q emits refs only.
 
 MVP can report deleted files but not deleted functions.
 
-### Milestone 10 - `dfog show`
+### Milestone 11 - `defog show`
 
 Tests first:
 
@@ -1856,7 +1897,7 @@ show reads refs from stdin.
 show handles ambiguous bare symbols with helpful choices.
 ```
 
-### Milestone 11 - `dfog find`
+### Milestone 12 - `defog find`
 
 Tests first:
 
@@ -1871,7 +1912,7 @@ find -q emits refs.
 
 Start with simple search.
 
-### Milestone 12 - Diagram model and DOT export
+### Milestone 13 - Diagram model and DOT export
 
 Tests first:
 
@@ -1886,7 +1927,7 @@ Calls graph exports expected DOT.
 Flow graph exports expected DOT for simple function.
 ```
 
-### Milestone 13 - `dfog graph`
+### Milestone 14 - `defog graph`
 
 Tests first:
 
@@ -1903,7 +1944,7 @@ Reads targets from stdin.
 
 Use a fake renderer in tests.
 
-### Milestone 14 - `dfog inspect`
+### Milestone 15 - `defog inspect`
 
 Tests first:
 
@@ -1914,7 +1955,7 @@ inspect function prints important spans.
 inspect changed region prints span.
 ```
 
-### Milestone 15 - `dfog report`
+### Milestone 16 - `defog report`
 
 Tests first:
 
@@ -1928,7 +1969,7 @@ report reads targets from stdin.
 report output is deterministic for fixture repo.
 ```
 
-### Milestone 16 - Performance sanity checks
+### Milestone 17 - Performance sanity checks
 
 Tests or benchmarks:
 
@@ -2019,12 +2060,12 @@ For changed targets:
 These commands must read TargetRefs from stdin when no positional target is provided and stdin is not a TTY:
 
 ```bash
-dfog show
-dfog graph
-dfog report
+defog show
+defog graph
+defog report
 ```
 
-`dfog inspect` may require exactly one target in MVP.
+`defog inspect` may require exactly one target in MVP.
 
 ---
 
@@ -2033,18 +2074,18 @@ dfog report
 The MVP is complete when all of this works:
 
 ```bash
-dfog update
-dfog status
-dfog changed
-dfog changed --kind function
-dfog changed --kind function -q | dfog show -v
-dfog ls src --kind function
-dfog find "some query"
-dfog graph contain -o contain.dot
-dfog graph deps -o deps.dot
-dfog graph calls <function-ref> -o calls.dot
-dfog inspect <path>:<line>
-dfog report --changed --open
+defog update
+defog status
+defog changed
+defog changed --kind function
+defog changed --kind function -q | defog show -v
+defog ls src --kind function
+defog find "some query"
+defog graph contain -o contain.dot
+defog graph deps -o deps.dot
+defog graph calls <function-ref> -o calls.dot
+defog inspect <path>:<line>
+defog report --changed --open
 ```
 
 And:
@@ -2067,17 +2108,17 @@ The MVP does not attempt compiler-grade analysis.
 
 ```text
 You are implementing Defog, a local human-first code comprehension tool.
-The CLI command is dfog.
+The CLI command is defog.
 
 Primary goal:
 Help a developer understand code that was just generated or changed.
 
 Optimize the MVP for this workflow:
-  dfog update
-  dfog status
-  dfog changed --kind function
-  dfog changed --kind function -q | dfog show -v
-  dfog report --changed --open
+  defog update
+  defog status
+  defog changed --kind function
+  defog changed --kind function -q | defog show -v
+  defog report --changed --open
 
 Design principles:
 - Use existing tools instead of reinventing them.
@@ -2095,13 +2136,13 @@ Design principles:
 - Keep output deterministic.
 - Do not require live LLM calls in the MVP.
 
-If using C++:
-- Use C++20.
-- Follow the Google C++ Style Guide.
-- Use GoogleTest.
-- Prefer Status/StatusOr-style error handling.
-- Avoid exceptions in production logic unless strongly justified.
-- Keep modules small and testable.
+Implementation requirements:
+- Implement Defog in Go.
+- Use Go 1.22 or newer.
+- Use Go's standard `testing` package.
+- Prefer the Go standard library and small, justified dependencies.
+- Use ordinary Go error returns with contextual wrapping.
+- Keep packages small and testable.
 
 Implement red-green TDD:
 1. Write failing tests first.
@@ -2110,15 +2151,15 @@ Implement red-green TDD:
 4. Refactor while green.
 
 MVP commands:
-  dfog update
-  dfog status
-  dfog changed [--kind KIND] [--staged|--unstaged|--untracked] [--base REF] [-q|--jsonl]
-  dfog ls [SCOPE] [--kind KIND] [--changed] [-q|--jsonl]
-  dfog find QUERY [--kind KIND] [--changed] [-q|--jsonl]
-  dfog show [TARGET...] [-v]
-  dfog graph <contain|deps|calls|flow> [TARGET...] [-d N] [-o FILE] [--out-dir DIR]
-  dfog inspect TARGET
-  dfog report [TARGET...] [--changed] [--base REF] [--open] [-o DIR]
+  defog update
+  defog status
+  defog changed [--kind KIND] [--staged|--unstaged|--untracked] [--base REF] [-q|--jsonl]
+  defog ls [SCOPE] [--kind KIND] [--changed] [-q|--jsonl]
+  defog find QUERY [--kind KIND] [--changed] [-q|--jsonl]
+  defog show [TARGET...] [-v]
+  defog graph <contain|deps|calls|flow> [TARGET...] [-d N] [-o FILE] [--out-dir DIR]
+  defog inspect TARGET
+  defog report [TARGET...] [--changed] [--base REF] [--open] [-o DIR]
 
 TargetRef format:
   path
@@ -2127,15 +2168,15 @@ TargetRef format:
   path::qualified_symbol@start-end
 
 Selector commands produce target sets:
-  dfog changed
-  dfog ls
-  dfog find
+  defog changed
+  defog ls
+  defog find
 
 View commands consume target sets:
-  dfog show
-  dfog graph
-  dfog report
-  dfog inspect
+  defog show
+  defog graph
+  defog report
+  defog inspect
 
 Commands that consume targets should accept positional targets or read TargetRefs from stdin when no targets are supplied.
 
@@ -2198,12 +2239,12 @@ The MVP wins if, after Codex changes a repo, the developer can run one or two co
 
 These references support the implementation choices, but the spec intentionally leaves room for the coding agent to make simpler choices when appropriate.
 
-- Google C++ Style Guide: https://google.github.io/styleguide/cppguide.html
-- GoogleTest Primer: https://google.github.io/googletest/primer.html
+- Go documentation: https://go.dev/doc/
+- Effective Go: https://go.dev/doc/effective_go
+- Go testing package: https://pkg.go.dev/testing
 - Git status documentation: https://git-scm.com/docs/git-status
 - Git diff documentation: https://git-scm.com/docs/git-diff
 - Graphviz DOT language: https://graphviz.org/doc/info/lang.html
 - Graphviz overview: https://graphviz.org/
 - Tree-sitter overview: https://tree-sitter.github.io/
 - SQLite FTS5 documentation: https://www.sqlite.org/fts5.html
-- CTest manual: https://cmake.org/cmake/help/latest/manual/ctest.1.html
